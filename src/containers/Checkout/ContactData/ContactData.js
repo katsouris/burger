@@ -3,15 +3,57 @@ import Button from '../../../components/UI/Button/Button';
 import classes from './ContactData.css';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import axios from "../../../axios-orders";
+import Input from '../../../components/UI/Input/Input';
 
 
 class contactData extends Component{
     state={
-        name: '',
-        email:'',
-        address:{
-            street:'',
-            postalCode:''
+        orderForm: {
+
+                name : {
+                  elementType: 'input',
+                  elementConfig:{
+                      type: 'text',
+                      placeholder: 'Your name'
+                  },
+                  value: ''
+                },
+                surname: {
+                    elementType: 'input',
+                    elementConfig:{
+                        type: 'text',
+                        placeholder: 'Your surname'
+                    },
+                    value: ''
+                },
+                age: {
+                    elementType: 'input',
+                    elementConfig:{
+                        type: 'text',
+                        placeholder: 'Your age'
+                    },
+                    value: ''
+                },
+                email: {
+                    elementType: 'input',
+                    elementConfig:{
+                        type: 'email',
+                        placeholder: 'Your email'
+                    },
+                    value: ''
+                },
+                deliveryMethod:{
+                    elementType: 'select',
+                    elementConfig:{
+                        options:[
+                            {value: 'fastest', displayValue: 'Fastest'},
+                            {value: 'cheapest', displayValue: 'Cheapest'}
+                            ]
+                    },
+                    value: ''
+                }
+
+
         },
         loader: false
     }
@@ -19,15 +61,15 @@ class contactData extends Component{
         event.preventDefault();
         this.setState({loader:true});
         //alert('THA FAME MAGKES')
+        const formData ={};
+        for(let formElementIdentifier in this.state.orderForm){
+            formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value
+        }
         const order = {
             ingredients : this.props.ingredients,
             price : this.props.price,
-            customer:{
-                name : 'Dimitris',
-                surname: 'Katsouris',
-                age: '10',
-                email: 'katsourisdimi@gmail.com'
-            }
+            orderData: formData
+
 
 
         };
@@ -39,13 +81,43 @@ class contactData extends Component{
             this.setState({ loader: false})
         })
     }
+
+     inputChangedHandler=(event,inputIndentifier)=>{
+        //console.log(event.target.value)
+         let updatedOrderForm={
+             ...this.state.orderForm
+         }
+
+         const updatedOrderFormElement= {
+             ...updatedOrderForm[inputIndentifier]
+        };
+        updatedOrderFormElement.value= event.target.value
+        updatedOrderForm[inputIndentifier] = updatedOrderFormElement
+         this.setState({
+             orderForm: updatedOrderForm
+          })
+
+
+
+    }
     render(){
+        const formElementArray= [];
+        for(let key in this.state.orderForm){
+            formElementArray.push({
+                id: key,
+                config: this.state.orderForm[key]
+            });
+        }
         let form=(
             <form>
-            <input className={classes.Input}  type="text" name="name" placeholder="Your name" ></input>
-            <input className={classes.Input} type="email" name="email" placeholder="Your email" ></input>
-            <input className={classes.Input} type="text" name="street" placeholder="Your street" ></input>
-            <input className={classes.Input} type="text" name="postalcode" placeholder="Your postalCode" ></input>
+                {formElementArray.map(formElement=>(
+                    <Input
+                        key={ formElement.id}
+                        elementType={formElement.config.elementType}
+                        elementConfig={formElement.config.elementConfig}
+                        value={formElement.config.value}
+                        changed={(event)=>this.inputChangedHandler(event,formElement.id)}/>
+                ))}
             <Button Btntype="Success" clicked={this.orderHandler} >Order Now</Button>
         </form>
         );
