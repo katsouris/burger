@@ -16,7 +16,7 @@ const order=(props)=>{
            display: 'inline-block',
            margin:'0 8px',
            border: '1px solid #ccc',
-           padding: '5px'}}> {ig.name} {ig.amount}</span>
+           padding: '5px'}} key={ig.name}> {ig.name} {ig.amount}</span>
     });
    return(
        <div className={classes.Order}>
