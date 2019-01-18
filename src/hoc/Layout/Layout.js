@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import {connect} from 'react-redux';
-import {withRouter} from 'react-router-dom'
+import {withRouter} from 'react-router-dom';
 import Aux from '../Aux/Aux';
 import classes from './Layout.css';
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
